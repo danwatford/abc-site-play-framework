@@ -1,15 +1,58 @@
+@import com.foomoo.abc.tune.AbcTune
+@import com.foomoo.stringstore.service.StringSummary
+@import services.AbcFileRecord
+@(recentFileRecords: List[AbcFileRecord],
+        tunes: Iterable[AbcTune],
+        tuneSequences: Map[String, Set[String]],
+        filesCount: Long,
+        tunesCount: Long)
+    @*
+    * Call the `main` template with two arguments. The first
+    * argument is a `String` with the title of the page, the second
+    * argument is an `Html` object containing the body of the page.
+    *@
+    @main("ABC Site") {
+
+        <h1>ABC File Upload</h1>
+        @helper.form(action = routes.FileController.upload, 'enctype -> "multipart/form-data") {
+            <input type="file" name="abc_file">
+            <p>
+                <input type="submit">
+            </p>
+        }
+
+        <h1>Recent Files</h1>
+        <ul>
+        @for(fileRecord <- recentFileRecords.take(10)) {
+            <li>@fileRecord.id @fileRecord.content.take(50)</li>
+        }
+        </ul>
+
+        <h1>Recent Tunes</h1>
+        <ul>
+        @for(tune <- tunes) {
+            <li>@tune.titles.take(10).mkString(" / ") - @tune.reference - @tune.key</li>
+        }
+        </ul>
+
+        <h1>Tune Sequences</h1>
+
+        <ul>
+        @for(tuneSequenceEntry <- tuneSequences) {
+            <li>@tuneSequenceEntry._1
+            <ul>
+            @for(tune <- tuneSequenceEntry._2) {
+                <li>@tune</li>
+            }
+            </ul>
+            </li>
+        }
+        </ul>
 
 
-@*
- * Call the `main` template with two arguments. The first
- * argument is a `String` with the title of the page, the second
- * argument is an `Html` object containing the body of the page.
- *@
-@main("Welcome to Play") {
-
-    <h1>ABC Parser</h1>
-
-    <a href="@routes.FileController.uploadForm()">Upload an ABC file</a>
-
-
-}
+        <h1>Status</h1>
+        <ul>
+            <li>Files Count: @filesCount</li>
+            <li>Tunes Count: @tunesCount</li>
+        </ul>
+    }

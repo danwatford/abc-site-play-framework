@@ -10,7 +10,11 @@ libraryDependencies ++= Seq(
   jdbc,
   cache,
   ws,
-  "org.scalatestplus.play" %% "scalatestplus-play" % "1.5.1" % Test
+  "com.foomoo.abc" %% "abc-domain" % "0.2-SNAPSHOT",
+  "com.foomoo.abc" %% "abc-parser" % "0.2-SNAPSHOT",
+  "com.foomoo.abc" %% "abc-app" % "0.2-SNAPSHOT",
+  "com.foomoo.string-store" % "string-store-service-api" % "0.2-SNAPSHOT",
+  "com.foomoo.string-store" % "string-store-service-provider-mongo" % "0.2-SNAPSHOT",
+  "org.scalatestplus.play" %% "scalatestplus-play" % "1.5.1" % Test,
+  "commons-cli" % "commons-cli" % "1.2"
 )
-
-resolvers += "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases"
