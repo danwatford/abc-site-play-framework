@@ -25,6 +25,13 @@ class AbcTuneService @Inject()(tuneProcessor: AbcTuneProcessor) extends AbcFileP
 
   val titleTuneRecord = collection.mutable.HashMap[String, AbcTuneRecord]()
 
+  /**
+    * Parse the given ABC file content into an AbcNotationFile object.
+    *
+    * @param fileContent The ABC file content to parse.
+    * @return A Try of AbcNotationFile representing the parsed ABC file. A Failure will be returned in the file content
+    *         cannot be parsed without error.
+    */
   private def parseFileContent(fileContent: String): Try[AbcNotationFile] =
     AbcNotationParser.file(new CharSequenceReader(fileContent)) match {
       case AbcNotationParser.NoSuccess(msg, next) =>
@@ -33,6 +40,13 @@ class AbcTuneService @Inject()(tuneProcessor: AbcTuneProcessor) extends AbcFileP
         Success(ts)
     }
 
+  /**
+    * Adds tunes to the store from the given file content.
+    *
+    * @param fileId      The id of the file.
+    * @param fileContent The content of the file.
+    * @return The list of AbcTunes extracted from the file content.
+    */
   def addFromFileContent(fileId: UUID, fileContent: String): Try[List[AbcTune]] =
 
     parseFileContent(fileContent).map(abcNotationFile => {
@@ -41,7 +55,6 @@ class AbcTuneService @Inject()(tuneProcessor: AbcTuneProcessor) extends AbcFileP
 
       val addTuneResults: List[(AbcTuneRecord, Boolean)] = abcTunes.map(abcTune => addTune(abcTune, fileId))
 
-      val tuneRecords = addTuneResults.map(_._1)
       val newTuneRecords = addTuneResults.filter(_._2).map(_._1)
 
       tuneProcessor.process(newTuneRecords.map(record => (record.id, record.tune)))
@@ -72,22 +85,47 @@ class AbcTuneService @Inject()(tuneProcessor: AbcTuneProcessor) extends AbcFileP
     }
   }
 
+  /**
+    * Determine whether the given tune exists in the tune store.
+    *
+    * @param abcTune The tune to test for.
+    * @return An Option of the AbcTuneRecord, None if the tune doesn't exist.
+    */
   private def existingTune(abcTune: AbcTune): Option[AbcTuneRecord] = {
 
     existingTuneByHash(abcTune).orElse(existingTuneByTitle(abcTune))
   }
 
+  /**
+    * Determine whether the given tune exists in the tune store by testing the hash of the tunes's body elements.
+    *
+    * @param abcTune The tune to test for.
+    * @return An Option of the AbcTuneRecord, None if the tune doesn't exist.
+    */
   private def existingTuneByHash(abcTune: AbcTune): Option[AbcTuneRecord] = {
     val tuneHash = abcTune.bodyElements.hashCode()
 
     hashTuneRecord.get(tuneHash)
   }
 
+  /**
+    * Determine whether the given tune exists in the tune store by testing the tune's title.
+    *
+    * @param abcTune The tune to test for.
+    * @return An Option of the AbcTuneRecord, None if the tune doesn't exist.
+    */
   private def existingTuneByTitle(abcTune: AbcTune): Option[AbcTuneRecord] = {
 
     abcTune.titles.find(titleTuneRecord.contains).flatMap(titleTuneRecord.get)
   }
 
+  /**
+    * Add the given tune to the store.
+    *
+    * @param abcTune The tune to add.
+    * @param fileId  The id of the file the tune was extracted from.
+    * @return The new AbcTuneRecord of the added tune.
+    */
   private def addNewTune(abcTune: AbcTune, fileId: UUID): AbcTuneRecord = {
     val tuneId = UUID.randomUUID()
     val abcTuneRecord = AbcTuneRecord(tuneId, abcTune, Set(fileId))
@@ -100,6 +138,15 @@ class AbcTuneService @Inject()(tuneProcessor: AbcTuneProcessor) extends AbcFileP
     abcTuneRecord
   }
 
+  /**
+    * Merge the given tune with the existing tune identified by the given tune id.
+    *
+    * @param tuneId  The id of the already existing tune.
+    * @param abcTune The tune to merge with the existing tune.
+    * @param fileId  The id of the file that the given tune was extracted from.
+    * @return The new AbcTuneRecord representing the resulting tune from the merge operation. The
+    *         original tune id will be kept.
+    */
   private def mergeTuneToRecord(tuneId: UUID, abcTune: AbcTune, fileId: UUID): AbcTuneRecord = {
 
     idTuneRecord(tuneId) match {
@@ -126,12 +173,11 @@ class AbcTuneService @Inject()(tuneProcessor: AbcTuneProcessor) extends AbcFileP
 
   def getTuneCount: Long = idTuneRecord.size
 
-  def idToTitle(id: UUID): String = {
-    idTuneRecord(id).tune.titles.mkString("/")
-  }
-
   /**
     * Get the AbcTuneRecords corresponding to the given tune record ids.
+    *
+    * Note that AbcTuneRecords are snapshots of the tune record at a point in time, only the tune id from the
+    * record will be maintained. AbcTuneRecords will be replaced in the store as other tunes are merged with them.
     *
     * @param ids The tune record ids to lookup.
     * @return The found AbcTuneRecords. Any unknown ids will be absent from the results.
@@ -154,5 +200,12 @@ class AbcTuneService @Inject()(tuneProcessor: AbcTuneProcessor) extends AbcFileP
   override def process(content: String, id: UUID): Unit = addFromFileContent(id, content)
 }
 
+/**
+  * A snapshot in time of a tune's record.
+  *
+  * @param id      The id of the tune.
+  * @param tune    The tune.
+  * @param fileIds The ids of files that the tune has been found in.
+  */
 case class AbcTuneRecord(id: UUID, tune: AbcTune, fileIds: Set[UUID])
 
