@@ -28,6 +28,14 @@ class AbcFileService @Inject()(abcFileProcessor: AbcFileProcessor) {
   }).fallbackTo(Future {})
 
   /**
+    * Get the file record for the given file id.
+    *
+    * @param fileId The file Id to lookup the file record by.
+    * @return An Option of AbcFileRecord for the found file id. None if the file id is not found.
+    */
+  def getFileRecord(fileId: UUID): Future[Option[AbcFileRecord]] = filesLoadedFuture.map(_ => idFileRecord.get(fileId))
+
+  /**
     * Retrieve the records of the most recent 4 files added to the non-persistent store.
     *
     * @return List of AbcFileRecords for most recently added files.

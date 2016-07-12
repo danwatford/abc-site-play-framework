@@ -1,0 +1,15 @@
+@import services.{AbcFileRecord, AbcTuneRecord}
+@(pageTitle: String, abcFileRecord: AbcFileRecord, tuneRecords: Iterable[AbcTuneRecord])
+
+@main(pageTitle) {
+
+    <h1>ABC File @abcFileRecord.id</h1>
+
+    <h2>Tunes</h2>
+    This file contains @tuneRecords.size tunes:
+    <ul>
+    @for(tuneRecord <- tuneRecords) {
+        <li><a href="/tunes/@tuneRecord.id">@tuneRecord.tune.titles.take(10).mkString(" / ")</a> - @tuneRecord.tune.key</li>
+    }
+    </ul>
+}

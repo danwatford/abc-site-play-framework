@@ -8,6 +8,7 @@ import com.foomoo.abc.notation.parsing.AbcNotationParser
 import com.foomoo.abc.tune.conversion.AbcNotationConverter
 import com.foomoo.abc.tune.{AbcTune, AbcTuneBuilder}
 
+import scala.collection.mutable
 import scala.util.parsing.input.CharSequenceReader
 import scala.util.{Failure, Success, Try}
 
@@ -21,9 +22,11 @@ class AbcTuneService @Inject()(tuneProcessor: AbcTuneProcessor) extends AbcFileP
 
   val hashTuneRecord = collection.mutable.HashMap[Int, AbcTuneRecord]()
   val idTuneRecord = collection.mutable.HashMap[UUID, AbcTuneRecord]()
-  val tunesStack = collection.mutable.Stack[AbcTune]()
+  val tuneIdsStack = collection.mutable.Stack[UUID]()
 
   val titleTuneRecord = collection.mutable.HashMap[String, AbcTuneRecord]()
+  val fileIdTuneIds = new collection.mutable.HashMap[UUID, collection.mutable.Set[UUID]]
+    with mutable.MultiMap[UUID, UUID]
 
   /**
     * Parse the given ABC file content into an AbcNotationFile object.
@@ -133,7 +136,8 @@ class AbcTuneService @Inject()(tuneProcessor: AbcTuneProcessor) extends AbcFileP
 
     hashTuneRecord(tuneHash) = abcTuneRecord
     idTuneRecord(tuneId) = abcTuneRecord
-    tunesStack.push(abcTune)
+    tuneIdsStack.push(tuneId)
+    fileIdTuneIds.addBinding(fileId, tuneId)
 
     abcTuneRecord
   }
@@ -162,6 +166,7 @@ class AbcTuneService @Inject()(tuneProcessor: AbcTuneProcessor) extends AbcFileP
 
         hashTuneRecord(tuneHash) = abcTuneRecord
         idTuneRecord(tuneId) = abcTuneRecord
+        fileIdTuneIds.addBinding(fileId, tuneId)
 
         abcTuneRecord
     }
@@ -169,7 +174,7 @@ class AbcTuneService @Inject()(tuneProcessor: AbcTuneProcessor) extends AbcFileP
 
   def getAllAbcTunes: Iterable[AbcTune] = idTuneRecord.values.map(_.tune)
 
-  def getRecentAbcTunes(limit: Int): Iterable[AbcTune] = tunesStack.take(limit)
+  def getRecentAbcTunes(limit: Int): Iterable[AbcTuneRecord] = getTuneRecordsById(tuneIdsStack.take(limit).toSet)
 
   def getTuneCount: Long = idTuneRecord.size
 
@@ -184,6 +189,21 @@ class AbcTuneService @Inject()(tuneProcessor: AbcTuneProcessor) extends AbcFileP
     */
   def getTuneRecordsById(ids: Set[UUID]): Set[AbcTuneRecord] =
     idTuneRecord.filter(entry => ids.contains(entry._1)).values.toSet
+
+  /**
+    * Get the AbcTuneRecords for tunes extracted from the file specified by the given file id.
+    *
+    * Note that AbcTuneRecords are snapshots of the tune record at a point in time, only the tune id from the
+    * record will be maintained. AbcTuneRecords will be replaced in the store as other tunes are merged with them.
+    *
+    * @param fileId The id of the file to lookup tunes by.
+    * @return The found AbcTuneRecords. The Set will be empty if no tunes found for the given file id.
+    */
+  def getTuneRecordsByFileId(fileId: UUID): Set[AbcTuneRecord] = {
+    val tuneIdsOption = fileIdTuneIds.get(fileId).map(_.toSet)
+
+    tuneIdsOption.map(tuneIds => getTuneRecordsById(tuneIds)).getOrElse(Set())
+  }
 
   /** Determine whether the String content is considered a valid ABC File.
     *
