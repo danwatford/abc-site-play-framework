@@ -1,8 +1,6 @@
-@import com.foomoo.abc.tune.AbcTune
-@import com.foomoo.stringstore.service.StringSummary
-@import services.AbcFileRecord
+@import services.{AbcFileRecord, AbcTuneRecord}
 @(recentFileRecords: List[AbcFileRecord],
-        tunes: Iterable[AbcTune],
+        tuneRecords: Iterable[AbcTuneRecord],
         tuneSequences: Map[String, Set[String]],
         filesCount: Long,
         tunesCount: Long)
@@ -13,7 +11,10 @@
     *@
     @main("ABC Site") {
 
-        <h1>ABC File Upload</h1>
+        <h1>ABC Files, Tunes and Note Sequences</h1>
+
+        <h2>ABC File Upload</h2>
+        Upload a new ABC File to the site. Tunes found in the file will be extracted and added to the tunes and note sequences held by the site.
         @helper.form(action = routes.FileController.upload, 'enctype -> "multipart/form-data") {
             <input type="file" name="abc_file">
             <p>
@@ -21,22 +22,22 @@
             </p>
         }
 
-        <h1>Recent Files</h1>
+        <h2>Recently Added Files</h2>
         <ul>
         @for(fileRecord <- recentFileRecords.take(10)) {
-            <li>@fileRecord.id @fileRecord.content.take(50)</li>
+            <li><a href="files/@fileRecord.id">@fileRecord.id</a> @fileRecord.content.take(50)</li>
         }
         </ul>
 
-        <h1>Recent Tunes</h1>
+        <h2>Recently Added Tunes</h2>
         <ul>
-        @for(tune <- tunes) {
-            <li>@tune.titles.take(10).mkString(" / ") - @tune.reference - @tune.key</li>
+        @for(tuneRecord <- tuneRecords) {
+            <li><a href="tunes/@tuneRecord.id">@tuneRecord.tune.titles.take(10).mkString(" / ")</a> - @tuneRecord.tune.key</li>
         }
         </ul>
 
-        <h1>Tune Sequences</h1>
-
+        <h2>Sample Note Sequences</h2>
+        A selection of note sequences and the tunes they appear in.
         <ul>
         @for(tuneSequenceEntry <- tuneSequences) {
             <li>@tuneSequenceEntry._1
@@ -49,8 +50,7 @@
         }
         </ul>
 
-
-        <h1>Status</h1>
+        <h2>Status</h2>
         <ul>
             <li>Files Count: @filesCount</li>
             <li>Tunes Count: @tunesCount</li>

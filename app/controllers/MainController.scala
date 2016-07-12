@@ -8,16 +8,19 @@ import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.mvc._
 import services._
 
-
 /**
-  * Main controller for the ABC Parser Website.
-  *
-  * This controller provides provides the front page.
+  * Front page controller for the ABC Parser Website.
   */
 class MainController @Inject()(fileStorage: AbcFileService,
                                tuneStorage: AbcTuneService,
                                tuneSequenceStorage: AbcTuneSequenceService,
                                statusService: Status) extends Controller {
+
+  // Minimum number of tunes that must include a note sequence for it to be shown on the front page.
+  val minTunesPerSequence = 8
+
+  // The number of note sequences to be displayed on the front page.
+  val displayedNoteSequences = 10
 
   /**
     * The ABC Parser main page.
@@ -28,7 +31,7 @@ class MainController @Inject()(fileStorage: AbcFileService,
       recentFiles <- fileStorage.getRecentAbcFileRecords;
       filesCount <- statusService.getFileCount
     ) yield {
-      val tuneSequences: Map[NoteSequence, Set[UUID]] = tuneSequenceStorage.getSequences(8)
+      val tuneSequences: Map[NoteSequence, Set[UUID]] = tuneSequenceStorage.getSequences(minTunesPerSequence)
 
       val tuneIdSetsSequencesMap: Map[Set[UUID], NoteSequence] = tuneSequences.map(_.swap)
 
@@ -36,12 +39,10 @@ class MainController @Inject()(fileStorage: AbcFileService,
         tuneIdSetsSequencesMap.map(entry => (tuneStorage.getTuneRecordsById(entry._1), entry._2))
 
       val printableTuneSequences: Map[String, Set[String]] = tunesRecordsSequencesMap.map {
-        case (tuneRecords, noteSequence) => {
+        case (tuneRecords, noteSequence) =>
           val noteSequenceString = noteSequence.map(_.note).mkString(" ")
           (noteSequenceString, tuneRecords.map(tuneRecord => tuneRecord.tune.titles.mkString("/")))
-          // TODO Add file id to output
-        }
-      }.filter(_._2.size >= 8)
+      }.filter(_._2.size >= minTunesPerSequence).take(displayedNoteSequences)
 
 
       Ok(views.html.index(recentFiles,
