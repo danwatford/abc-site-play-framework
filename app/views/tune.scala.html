@@ -1,0 +1,37 @@
+@import services.{AbcFileRecord, AbcTuneRecord}
+@(pageTitle: String,
+        tuneRecord: AbcTuneRecord,
+        fileRecords: Iterable[AbcFileRecord],
+        tuneSequencesMap: Map[String, Set[AbcTuneRecord]])
+
+    @main(pageTitle) {
+
+        <h1>ABC Tune @tuneRecord.tune.titles.take(10).mkString(" / ")</h1>
+        <ul>
+            @tuneRecord.tune.reference
+            @tuneRecord.tune.composer
+            @tuneRecord.tune.meter
+            @tuneRecord.tune.key
+
+        </ul>
+
+        <h2>Sequences shared with other tunes:</h2>
+        <ul>
+            @for(tuneSequenceEntry <- tuneSequencesMap) {
+                <li>@tuneSequenceEntry._1
+                <ul>
+                @for(tuneRecord <- tuneSequenceEntry._2) {
+                    <li><a href="/tunes/@tuneRecord.id">@tuneRecord.tune.titles.take(10).mkString(" / ")</a> - @tuneRecord.tune.key</li>
+                }
+                </ul>
+                </li>
+            }
+        </ul>
+
+        <h2>Files containing this tune:</h2>
+        <ul>
+        @for(fileRecord <- fileRecords) {
+            <li><a href="/files/@fileRecord.id">@fileRecord.id</a> @fileRecord.content.take(50)</li>
+        }
+        </ul>
+    }

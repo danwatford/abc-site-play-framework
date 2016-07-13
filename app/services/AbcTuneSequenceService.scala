@@ -19,6 +19,9 @@ class AbcTuneSequenceService extends AbcTuneProcessor {
   val sequenceTunesMap = new collection.mutable.HashMap[NoteSequence, collection.mutable.Set[UUID]]
     with mutable.MultiMap[NoteSequence, UUID]
 
+  val tuneIdSequencesMap = new collection.mutable.HashMap[UUID, collection.mutable.Set[NoteSequence]]
+    with mutable.MultiMap[UUID, NoteSequence]
+
   /**
     * Process the given tuples of tune record ids and tunes to extract note sequences and maintain a mapping between
     * note sequences and tune record ids.
@@ -39,8 +42,10 @@ class AbcTuneSequenceService extends AbcTuneProcessor {
 
     sequences.foreach {
       case (noteSequence, tuneSet) =>
-        tuneSet.flatMap(tune => tuneIdMap.get(tune))
-          .foreach(tuneId => sequenceTunesMap.addBinding(noteSequence, tuneId))
+        tuneSet.flatMap(tune => tuneIdMap.get(tune)).foreach(tuneId => {
+          sequenceTunesMap.addBinding(noteSequence, tuneId)
+          tuneIdSequencesMap.addBinding(tuneId, noteSequence)
+        })
     }
   }
 
@@ -57,6 +62,17 @@ class AbcTuneSequenceService extends AbcTuneProcessor {
     */
   def getSequences(tuneCount: Int): Map[NoteSequence, Set[UUID]] = {
     sequenceTunesMap.filter(_._2.size >= tuneCount).map(entry => entry._1 -> entry._2.toSet).toMap
+  }
+
+  /**
+    * For the given tune record id, returns a map of NoteSequences found in the tune along with the
+    * tune record ids of the tunes that also contain those NoteSequences.
+    *
+    * @param tuneId The tune record id to find sequences for.
+    * @return A Map of NoteSequence to tune record ids.
+    */
+  def getSequencesByTuneId(tuneId: UUID): Map[NoteSequence, Set[UUID]] = {
+    sequenceTunesMap.filter(entry => entry._2.contains(tuneId)).map(entry => (entry._1, entry._2.toSet)).toMap
   }
 
 }

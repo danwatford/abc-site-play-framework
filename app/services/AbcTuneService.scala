@@ -7,6 +7,7 @@ import com.foomoo.abc.notation.AbcNotationFile
 import com.foomoo.abc.notation.parsing.AbcNotationParser
 import com.foomoo.abc.tune.conversion.AbcNotationConverter
 import com.foomoo.abc.tune.{AbcTune, AbcTuneBuilder}
+import play.api.Logger
 
 import scala.collection.mutable
 import scala.util.parsing.input.CharSequenceReader
@@ -24,7 +25,7 @@ class AbcTuneService @Inject()(tuneProcessor: AbcTuneProcessor) extends AbcFileP
   val idTuneRecord = collection.mutable.HashMap[UUID, AbcTuneRecord]()
   val tuneIdsStack = collection.mutable.Stack[UUID]()
 
-  val titleTuneRecord = collection.mutable.HashMap[String, AbcTuneRecord]()
+  val titleTuneIds = collection.mutable.HashMap[String, UUID]()
   val fileIdTuneIds = new collection.mutable.HashMap[UUID, collection.mutable.Set[UUID]]
     with mutable.MultiMap[UUID, UUID]
 
@@ -108,6 +109,11 @@ class AbcTuneService @Inject()(tuneProcessor: AbcTuneProcessor) extends AbcFileP
   private def existingTuneByHash(abcTune: AbcTune): Option[AbcTuneRecord] = {
     val tuneHash = abcTune.bodyElements.hashCode()
 
+//    Logger.debug(s"Testing tune ${abcTune.titles}: $tuneHash")
+    if (abcTune.titles.exists(title => title.contains("Mallow"))) {
+      Logger.debug(s"Testing tune by hash ${abcTune.titles}: $tuneHash: Result: ${hashTuneRecord.get(tuneHash)}")
+    }
+
     hashTuneRecord.get(tuneHash)
   }
 
@@ -119,7 +125,14 @@ class AbcTuneService @Inject()(tuneProcessor: AbcTuneProcessor) extends AbcFileP
     */
   private def existingTuneByTitle(abcTune: AbcTune): Option[AbcTuneRecord] = {
 
-    abcTune.titles.find(titleTuneRecord.contains).flatMap(titleTuneRecord.get)
+    if (abcTune.titles.exists(title => title.contains("Mallow"))) {
+      Logger.debug(s"Testing tune by titles ${abcTune.titles}: Result: ${abcTune.titles.find(title => titleTuneIds.contains(title)).flatMap(title => titleTuneIds.get(title))}")
+      Logger.debug(s"Current titles ${titleTuneIds.keys}")
+    }
+
+    abcTune.titles.find(title => titleTuneIds.contains(title))
+      .flatMap(title => titleTuneIds.get(title))
+      .flatMap(id => getTuneRecordById(id))
   }
 
   /**
@@ -138,6 +151,8 @@ class AbcTuneService @Inject()(tuneProcessor: AbcTuneProcessor) extends AbcFileP
     idTuneRecord(tuneId) = abcTuneRecord
     tuneIdsStack.push(tuneId)
     fileIdTuneIds.addBinding(fileId, tuneId)
+
+    abcTune.titles.foreach(title => titleTuneIds(title) = tuneId)
 
     abcTuneRecord
   }
@@ -168,6 +183,8 @@ class AbcTuneService @Inject()(tuneProcessor: AbcTuneProcessor) extends AbcFileP
         idTuneRecord(tuneId) = abcTuneRecord
         fileIdTuneIds.addBinding(fileId, tuneId)
 
+        abcTune.titles.foreach(title => titleTuneIds(title) = tuneId)
+
         abcTuneRecord
     }
   }
@@ -177,6 +194,17 @@ class AbcTuneService @Inject()(tuneProcessor: AbcTuneProcessor) extends AbcFileP
   def getRecentAbcTunes(limit: Int): Iterable[AbcTuneRecord] = getTuneRecordsById(tuneIdsStack.take(limit).toSet)
 
   def getTuneCount: Long = idTuneRecord.size
+
+  /**
+    * Get the AbcTuneRecord corresponding to the given tune record id.
+    *
+    * Note that AbcTuneRecords are snapshots of the tune record at a point in time, only the tune id from the
+    * record will be maintained. AbcTuneRecords will be replaced in the store as other tunes are merged with them.
+    *
+    * @param id The tune record id to lookup.
+    * @return Option of the found AbcTuneRecords. None if the tune record id is unknown.
+    */
+  def getTuneRecordById(id: UUID): Option[AbcTuneRecord] = idTuneRecord.get(id)
 
   /**
     * Get the AbcTuneRecords corresponding to the given tune record ids.
