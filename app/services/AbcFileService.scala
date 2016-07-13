@@ -30,10 +30,29 @@ class AbcFileService @Inject()(abcFileProcessor: AbcFileProcessor) {
   /**
     * Get the file record for the given file id.
     *
+    * Note that AbcFileRecords are snapshots of the file record at a point in time, only the file id from the
+    * record will be maintained. AbcFileRecords will be replaced in the store as attempts to upload matching
+    * file content are made and merged with the record.
+    *
     * @param fileId The file Id to lookup the file record by.
     * @return An Option of AbcFileRecord for the found file id. None if the file id is not found.
     */
   def getFileRecord(fileId: UUID): Future[Option[AbcFileRecord]] = filesLoadedFuture.map(_ => idFileRecord.get(fileId))
+
+
+  /**
+    * Get the AbcFileRecords corresponding to the given file record ids.
+    *
+    * Note that AbcFileRecords are snapshots of the file record at a point in time, only the file id from the
+    * record will be maintained. AbcFileRecords will be replaced in the store as attempts to upload matching
+    * file content are made and merged with the record.
+    *
+    * @param ids The file record ids to lookup.
+    * @return The found AbcFileRecords. Any unknown ids will be absent from the results.
+    */
+  def getFileRecordsById(ids: Set[UUID]): Future[Set[AbcFileRecord]] = filesLoadedFuture.map(_ =>
+    idFileRecord.filter(entry => ids.contains(entry._1)).values.toSet
+  )
 
   /**
     * Retrieve the records of the most recent 4 files added to the non-persistent store.

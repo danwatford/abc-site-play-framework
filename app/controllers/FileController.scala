@@ -15,9 +15,7 @@ import scala.io.Source
 import scala.util.{Failure, Success, Try}
 
 /**
-  * Upload controller for the ABC Parser Website.
-  *
-  * This controller provides pages to allow users to upload ABC files to storage.
+  * Upload and Get controller for ABC Files.
   */
 @Singleton
 class FileController @Inject()(fileService: AbcFileService, tuneService: AbcTuneService) extends Controller {
@@ -28,7 +26,7 @@ class FileController @Inject()(fileService: AbcFileService, tuneService: AbcTune
     * @param fileId The file id to lookup.
     * @return The file response.
     */
-  def getFile(fileId: UUID) = Action.async { request =>
+  def getFile(fileId: UUID) = Action.async {
     val fileRecordFuture = fileService.getFileRecord(fileId)
 
     fileRecordFuture.map {

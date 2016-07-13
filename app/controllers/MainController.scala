@@ -44,7 +44,6 @@ class MainController @Inject()(fileStorage: AbcFileService,
           (noteSequenceString, tuneRecords.map(tuneRecord => tuneRecord.tune.titles.mkString("/")))
       }.filter(_._2.size >= minTunesPerSequence).take(displayedNoteSequences)
 
-
       Ok(views.html.index(recentFiles,
         tuneStorage.getRecentAbcTunes(10),
         printableTuneSequences,
