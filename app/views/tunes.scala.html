@@ -1,0 +1,12 @@
+@import services.{AbcFileRecord, AbcTuneRecord}
+@(pageTitle: String, tuneRecords: Seq[AbcTuneRecord])
+
+@main(pageTitle) {
+
+    <h1>ABC Tunes</h1>
+
+    @for(tuneRecord <- tuneRecords) {
+        <li><a href="tunes/@tuneRecord.id">@tuneRecord.tune.titles.take(10).mkString(" / ")</a> - @tuneRecord.tune.key</li>
+    }
+
+}

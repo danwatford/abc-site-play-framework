@@ -189,7 +189,7 @@ class AbcTuneService @Inject()(tuneProcessor: AbcTuneProcessor) extends AbcFileP
     }
   }
 
-  def getAllAbcTunes: Iterable[AbcTune] = idTuneRecord.values.map(_.tune)
+  def getAllAbcTunes: Iterable[AbcTuneRecord] = idTuneRecord.values
 
   def getRecentAbcTunes(limit: Int): Iterable[AbcTuneRecord] = getTuneRecordsById(tuneIdsStack.take(limit).toSet)
 

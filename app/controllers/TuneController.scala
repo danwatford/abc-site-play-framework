@@ -18,7 +18,19 @@ class TuneController @Inject()(tuneService: AbcTuneService,
                                sequenceService: AbcTuneSequenceService) extends Controller {
 
   /**
-    * Get a response for looking up the given tune id.
+    * Get a response returning all tunes.
+    *
+    * @return The files response.
+    */
+  def getTunes = Action {
+
+    val tuneRecords = tuneService.getAllAbcTunes
+
+    Ok(views.html.tunes(s"ABC Site: Tunes", tuneRecords.toSeq))
+  }
+
+  /**
+    * Get a response returning the tune specified by the given tune id.
     *
     * @param tuneId The tune id to lookup.
     * @return The tune response.

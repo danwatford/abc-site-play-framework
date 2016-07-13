@@ -5,6 +5,7 @@ GET         /files                controllers.FileController.getFiles
 POST        /files/upload         controllers.FileController.upload
 GET         /files/:fileId        controllers.FileController.getFile(fileId: java.util.UUID)
 
+GET         /tunes                controllers.TuneController.getTunes
 GET         /tunes/:tuneId        controllers.TuneController.getTune(tuneId: java.util.UUID)
 
 # Map static resources from the /public folder to the /assets URL path
