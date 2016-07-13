@@ -39,6 +39,16 @@ class AbcFileService @Inject()(abcFileProcessor: AbcFileProcessor) {
     */
   def getFileRecord(fileId: UUID): Future[Option[AbcFileRecord]] = filesLoadedFuture.map(_ => idFileRecord.get(fileId))
 
+  /**
+    * Get all file records managed by this service.
+    *
+    * Note that AbcFileRecords are snapshots of the file record at a point in time, only the file id from the
+    * record will be maintained. AbcFileRecords will be replaced in the store as attempts to upload matching
+    * file content are made and merged with the record.
+    *
+    * @return The Set of AbcFileRecords. The Set will be empty if no records are found.
+    */
+  def getAllFileRecords: Future[Seq[AbcFileRecord]] = filesLoadedFuture.map(_ => idFileRecord.values.toSeq)
 
   /**
     * Get the AbcFileRecords corresponding to the given file record ids.

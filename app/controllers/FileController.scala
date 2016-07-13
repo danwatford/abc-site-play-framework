@@ -21,7 +21,20 @@ import scala.util.{Failure, Success, Try}
 class FileController @Inject()(fileService: AbcFileService, tuneService: AbcTuneService) extends Controller {
 
   /**
-    * Get a response for looking up the given file id.
+    * Get a response returning all files.
+    *
+    * @return The files response.
+    */
+  def getFiles = Action.async {
+    val fileRecordsFuture = fileService.getAllFileRecords
+
+    fileRecordsFuture.map(fileRecords =>
+      Ok(views.html.files(s"ABC Site: Files", fileRecords))
+    )
+  }
+
+  /**
+    * Get a response returning the file specified by the given file id.
     *
     * @param fileId The file id to lookup.
     * @return The file response.

@@ -1,0 +1,14 @@
+@import services.AbcFileRecord
+@(pageTitle: String, abcFileRecords: Seq[AbcFileRecord])
+
+@main(pageTitle) {
+
+    <h1>ABC Files</h1>
+
+    <ul>
+    @for(fileRecord <- abcFileRecords) {
+        <li><a href="files/@fileRecord.id">@fileRecord.id</a> @fileRecord.content.take(50)</li>
+    }
+    </ul>
+
+}

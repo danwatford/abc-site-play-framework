@@ -1,6 +1,7 @@
 
 GET         /                     controllers.MainController.index
 
+GET         /files                controllers.FileController.getFiles
 POST        /files/upload         controllers.FileController.upload
 GET         /files/:fileId        controllers.FileController.getFile(fileId: java.util.UUID)
 
