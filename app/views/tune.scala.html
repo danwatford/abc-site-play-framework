@@ -2,7 +2,8 @@
 @(pageTitle: String,
         tuneRecord: AbcTuneRecord,
         fileRecords: Iterable[AbcFileRecord],
-        tuneSequencesMap: Map[String, Set[AbcTuneRecord]])
+        tuneSequencesMap: Map[String, Set[AbcTuneRecord]],
+        tuneNotationText: String)
 
     @main(pageTitle) {
 
@@ -15,7 +16,7 @@
 
         </ul>
 
-        <div id="notation" />
+        <div id="notation"></div>
 
 
         <h2>Sequences shared with other tunes:</h2>
@@ -37,4 +38,10 @@
             <li><a href="/files/@fileRecord.id">@fileRecord.id</a> @fileRecord.content.take(50)</li>
         }
         </ul>
+
+
+    <script type="text/javascript">
+            ABCJS.renderAbc('notation',`@Html(tuneNotationText)`)
+    </script>
+
     }
