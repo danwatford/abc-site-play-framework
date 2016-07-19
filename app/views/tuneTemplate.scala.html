@@ -1,0 +1,4 @@
+@import services.AbcTuneRecord
+@(abcTuneRecord: AbcTuneRecord)
+
+    <a href="@routes.TuneController.getTune(abcTuneRecord.id)">@abcTuneRecord.tune.titles.take(10).mkString(" / ")</a> - @abcTuneRecord.tune.key

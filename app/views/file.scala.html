@@ -9,7 +9,7 @@
     This file contains @tuneRecords.size tunes:
     <ul>
     @for(tuneRecord <- tuneRecords) {
-        <li><a href="/tunes/@tuneRecord.id">@tuneRecord.tune.titles.take(10).mkString(" / ")</a> - @tuneRecord.tune.key</li>
+        <li>@tuneTemplate(tuneRecord)</li>
     }
     </ul>
 }

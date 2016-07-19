@@ -18,30 +18,26 @@
 
         <div id="notation"></div>
 
+        <div id="midi_div"></div>
 
         <h2>Sequences shared with other tunes:</h2>
         <ul>
             @for(tuneSequenceEntry <- tuneSequencesMap) {
-                <li>@tuneSequenceEntry._1
-                <ul>
-                @for(tuneRecord <- tuneSequenceEntry._2) {
-                    <li><a href="/tunes/@tuneRecord.id">@tuneRecord.tune.titles.take(10).mkString(" / ")</a> - @tuneRecord.tune.key</li>
-                }
-                </ul>
-                </li>
+                <li>@tuneSequenceTemplate(tuneSequenceEntry._1, tuneSequenceEntry._2)</li>
             }
         </ul>
 
         <h2>Files containing this tune:</h2>
         <ul>
         @for(fileRecord <- fileRecords) {
-            <li><a href="/files/@fileRecord.id">@fileRecord.id</a> @fileRecord.content.take(50)</li>
+            <li>@fileTemplate(fileRecord)</li>
         }
         </ul>
 
 
     <script type="text/javascript">
             ABCJS.renderAbc('notation',`@Html(tuneNotationText)`)
+            ABCJS.renderMidi('midi_div',`@Html(tuneNotationText)`, {}, { inlineControls : {standard: true}})
     </script>
 
     }

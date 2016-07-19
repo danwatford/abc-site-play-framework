@@ -1,14 +1,10 @@
 @import services.{AbcFileRecord, AbcTuneRecord}
 @(recentFileRecords: List[AbcFileRecord],
         tuneRecords: Iterable[AbcTuneRecord],
-        tuneSequences: Map[String, Set[String]],
+        tuneSequences: Map[String, Set[AbcTuneRecord]],
         filesCount: Long,
         tunesCount: Long)
-    @*
-    * Call the `main` template with two arguments. The first
-    * argument is a `String` with the title of the page, the second
-    * argument is an `Html` object containing the body of the page.
-    *@
+
     @main("ABC Site") {
 
         <h1>ABC Files, Tunes and Note Sequences</h1>
@@ -25,14 +21,14 @@
         <h2>Recently Added Files</h2>
         <ul>
         @for(fileRecord <- recentFileRecords.take(10)) {
-            <li><a href="files/@fileRecord.id">@fileRecord.id</a> @fileRecord.content.take(50)</li>
+            <li>@fileTemplate(fileRecord)</li>
         }
         </ul>
 
         <h2>Recently Added Tunes</h2>
         <ul>
         @for(tuneRecord <- tuneRecords) {
-            <li><a href="tunes/@tuneRecord.id">@tuneRecord.tune.titles.take(10).mkString(" / ")</a> - @tuneRecord.tune.key</li>
+            <li>@tuneTemplate(tuneRecord)</li>
         }
         </ul>
 
@@ -40,13 +36,7 @@
         A selection of note sequences and the tunes they appear in.
         <ul>
         @for(tuneSequenceEntry <- tuneSequences) {
-            <li>@tuneSequenceEntry._1
-            <ul>
-            @for(tune <- tuneSequenceEntry._2) {
-                <li>@tune</li>
-            }
-            </ul>
-            </li>
+            <li>@tuneSequenceTemplate(tuneSequenceEntry._1, tuneSequenceEntry._2)</li>
         }
         </ul>
 

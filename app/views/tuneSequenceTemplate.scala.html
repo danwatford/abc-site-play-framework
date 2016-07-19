@@ -1,0 +1,9 @@
+@import services.{AbcFileRecord, AbcTuneRecord}
+@(tuneSequence: String, tuneRecords: Iterable[AbcTuneRecord])
+
+    @tuneSequence
+    <ul>
+        @for(tuneRecord <- tuneRecords) {
+            <li>@tuneTemplate(tuneRecord)</li>
+        }
+    </ul>>

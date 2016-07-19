@@ -1,0 +1,4 @@
+@import services.AbcFileRecord
+@(abcFileRecord: AbcFileRecord)
+
+    <a href="@routes.FileController.getFile(abcFileRecord.id)">@abcFileRecord.id</a> @abcFileRecord.content.take(50)

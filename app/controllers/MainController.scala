@@ -38,10 +38,10 @@ class MainController @Inject()(fileStorage: AbcFileService,
       val tunesRecordsSequencesMap: Map[Set[AbcTuneRecord], NoteSequence] =
         tuneIdSetsSequencesMap.map(entry => (tuneStorage.getTuneRecordsById(entry._1), entry._2))
 
-      val printableTuneSequences: Map[String, Set[String]] = tunesRecordsSequencesMap.map {
+      val printableTuneSequences: Map[String, Set[AbcTuneRecord]] = tunesRecordsSequencesMap.map {
         case (tuneRecords, noteSequence) =>
           val noteSequenceString = noteSequence.map(_.note).mkString(" ")
-          (noteSequenceString, tuneRecords.map(tuneRecord => tuneRecord.tune.titles.mkString("/")))
+          (noteSequenceString, tuneRecords)
       }.filter(_._2.size >= minTunesPerSequence).take(displayedNoteSequences)
 
       Ok(views.html.index(recentFiles,

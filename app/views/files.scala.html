@@ -7,7 +7,7 @@
 
     <ul>
     @for(fileRecord <- abcFileRecords) {
-        <li><a href="files/@fileRecord.id">@fileRecord.id</a> @fileRecord.content.take(50)</li>
+        <li>@fileTemplate(fileRecord)</li>
     }
     </ul>
 
