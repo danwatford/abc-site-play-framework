@@ -7,7 +7,6 @@ import com.foomoo.abc.notation.AbcNotationFile
 import com.foomoo.abc.notation.parsing.AbcNotationParser
 import com.foomoo.abc.tune.conversion.AbcNotationConverter
 import com.foomoo.abc.tune.{AbcTune, AbcTuneBuilder}
-import play.api.Logger
 
 import scala.collection.mutable
 import scala.util.parsing.input.CharSequenceReader
@@ -107,13 +106,8 @@ class AbcTuneService @Inject()(tuneProcessor: AbcTuneProcessor) extends AbcFileP
     * @return An Option of the AbcTuneRecord, None if the tune doesn't exist.
     */
   private def existingTuneByHash(abcTune: AbcTune): Option[AbcTuneRecord] = {
+
     val tuneHash = abcTune.bodyElements.hashCode()
-
-//    Logger.debug(s"Testing tune ${abcTune.titles}: $tuneHash")
-    if (abcTune.titles.exists(title => title.contains("Mallow"))) {
-      Logger.debug(s"Testing tune by hash ${abcTune.titles}: $tuneHash: Result: ${hashTuneRecord.get(tuneHash)}")
-    }
-
     hashTuneRecord.get(tuneHash)
   }
 
@@ -124,11 +118,6 @@ class AbcTuneService @Inject()(tuneProcessor: AbcTuneProcessor) extends AbcFileP
     * @return An Option of the AbcTuneRecord, None if the tune doesn't exist.
     */
   private def existingTuneByTitle(abcTune: AbcTune): Option[AbcTuneRecord] = {
-
-    if (abcTune.titles.exists(title => title.contains("Mallow"))) {
-      Logger.debug(s"Testing tune by titles ${abcTune.titles}: Result: ${abcTune.titles.find(title => titleTuneIds.contains(title)).flatMap(title => titleTuneIds.get(title))}")
-      Logger.debug(s"Current titles ${titleTuneIds.keys}")
-    }
 
     abcTune.titles.find(title => titleTuneIds.contains(title))
       .flatMap(title => titleTuneIds.get(title))
