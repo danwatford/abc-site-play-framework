@@ -3,13 +3,18 @@
 
 @main(pageTitle) {
 
-    <h1>ABC File @abcFileRecord.id</h1>
+    <div class="page-header">
+        <h1>ABC File @abcFileRecord.id</h1>
+    </div>
 
-    <h2>Tunes</h2>
-    This file contains @tuneRecords.size tunes:
-    <ul>
-    @for(tuneRecord <- tuneRecords) {
-        <li>@tuneTemplate(tuneRecord)</li>
-    }
-    </ul>
+    <section class="gen-section">
+        <p class="lead">Tunes</p>
+        This file contains @tuneRecords.size tunes:
+        <ul>
+        @for(tuneRecord <- tuneRecords) {
+            <li>@tuneTemplate(tuneRecord)</li>
+        }
+        </ul>
+    </section>
+
 }

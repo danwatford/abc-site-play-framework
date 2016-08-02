@@ -3,7 +3,9 @@
 
 @main(pageTitle) {
 
-    <h1>ABC Tunes</h1>
+    <div class="page-header">
+        <h1>ABC Tunes</h1>
+    </div>
 
     @for(tuneRecord <- tuneRecords) {
         <li>@tuneTemplate(tuneRecord)</li>

@@ -5,39 +5,46 @@
         tuneSequencesMap: Map[String, Set[AbcTuneRecord]],
         tuneNotationText: String)
 
-    @main(pageTitle) {
+@main(pageTitle) {
 
+    <div class="page-header">
         <h1>ABC Tune @tuneRecord.tune.titles.take(10).mkString(" / ")</h1>
+    </div>
+
+    <section class="gen-section">
         <ul>
             @tuneRecord.tune.reference
             @tuneRecord.tune.composer
             @tuneRecord.tune.meter
             @tuneRecord.tune.key
-
         </ul>
 
         <div id="notation"></div>
 
         <div id="midi_div"></div>
+    </section>
 
-        <h2>Sequences shared with other tunes:</h2>
+    <section class="gen-section">
+        <p class="lead">Sequences shared with other tunes:</p>
         <ul>
-            @for(tuneSequenceEntry <- tuneSequencesMap) {
-                <li>@tuneSequenceTemplate(tuneSequenceEntry._1, tuneSequenceEntry._2)</li>
-            }
+        @for(tuneSequenceEntry <- tuneSequencesMap) {
+            <li>@tuneSequenceTemplate(tuneSequenceEntry._1, tuneSequenceEntry._2)</li>
+        }
         </ul>
+    </section>
 
-        <h2>Files containing this tune:</h2>
+    <section class="gen-section">
+        <p class="lead">Files containing this tune:</p>
         <ul>
         @for(fileRecord <- fileRecords) {
             <li>@fileTemplate(fileRecord)</li>
         }
         </ul>
+    </section>
 
 
     <script type="text/javascript">
-            ABCJS.renderAbc('notation',`@Html(tuneNotationText)`)
-            ABCJS.renderMidi('midi_div',`@Html(tuneNotationText)`, {}, { inlineControls : {standard: true}})
+            ABCJS.renderAbc('notation', `@Html(tuneNotationText)`)
+            ABCJS.renderMidi('midi_div', `@Html(tuneNotationText)`, {}, {inlineControls: {standard: true}})
     </script>
-
-    }
+}
