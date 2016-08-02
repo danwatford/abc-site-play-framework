@@ -44,6 +44,10 @@
             padding-bottom: 30px;
         }
 
+        #site-image {
+            max-height: 80px;
+        }
+
         </style>
     </head>
     <body>
@@ -73,7 +77,16 @@
         @content
         </div>
 
-            <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+        <footer class="site-footer">
+            <div class="container">
+                <p><center>
+                <a href="http://www.watfordconsulting.com" rel="home"><img id="site-image" class="img-responsive" src="@routes.Assets.versioned("images/logo-main-1-c1-200.png")"></a>
+                Copyright 2015-2016 <a href="http://www.watfordconsulting.com">Watford Consulting Ltd.</a>
+            </center></p>
+            </div>
+        </footer>
+
+        <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
             <!-- Include all compiled plugins (below), or include individual files as needed -->
         <script src="@routes.Assets.versioned("js/bootstrap.min.js")"></script>
