@@ -3,7 +3,7 @@ name := "abc-site-play"
 version := "0.2"
 
 resolvers += "Typesafe repository" at "https://repo.typesafe.com/typesafe/maven-releases/"
-
+resolvers += "JCenter" at "http://jcenter.bintray.com"
 
 lazy val root = (project in file(".")).enablePlugins(PlayScala)
 
