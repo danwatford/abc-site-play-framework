@@ -9,7 +9,7 @@ jdk:
 script:
  - sbt clean dist
 
-before_deploy: ./set_deployment_version.sh
+before_deploy: bash set_deployment_version.sh
 
 deploy:
  provider: bintray
