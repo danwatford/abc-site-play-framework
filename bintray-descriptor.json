@@ -13,7 +13,7 @@
   "files": [
     {
       "includePattern": "target/universal/(.*\\.zip)",
-      "uploadPattern": "gems/$1"
+      "uploadPattern": "zips/$1"
     }
   ],
   "publish": true
