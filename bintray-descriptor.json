@@ -2,7 +2,7 @@
   "package": {
     "name": "abc-play-site",
     "repo": "maven",
-    "subject": "abc-site",
+    "subject": "abc-play-site",
     "licenses": [
       "Apache 2.0"
     ]
