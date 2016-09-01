@@ -4,7 +4,20 @@ scala:
  -  2.11.7
 
 jdk:
-  - oraclejdk8
+ - oraclejdk8
+
+script:
+ - sbt clean dist
+
+before_deploy: ./set_deployment_version.sh
+
+deploy:
+ provider: bintray
+ file: "bintray-descriptor.json"
+ user: "danwatford"
+ key:
+   secure: "Mg8QT0GIYlSkfsQmC5dywV0fJp+B3mUaKPlgDSs30s4uVR1xF+GZ90QDHnCtWufKzh4haIFl0Lx8nGkMQ19sQOE7qR18flx94s5Wvd8whlfs0IPfS61br9h+YvPSrXAMBnQt9ZXxh30dZZGlT3joQTlxj0o4H4yddMqoCpbXM7BqigjUio0t1GrEcohDi4zg4ExDyeZL1lQBjq/yoMaMtm7DTamHMnxjDNgqULIXMnUAiVxIghsKX06fpFeA/YO4MOp1lLo12nUQAaKBmSJmKer4WtmykNSogEl8SFyBwMJT++ke2yvJsYO8zPeIc8TMPZ9xMQRBCr1aKoKWzRMPyGDb3ZhMtaH9ymbCcBnQ26ejzaltyiVlXkwNvCfR9bSRn72L2yEnaVrf3laZuHdq653kCYz7M0pTP8f9epVSrm863fhP+c5dyaw1SnA1o2hlpgvgAKusxXeHNjc2LsWr0dvvNLVbD5tZPew+M4fjWbIR2YPNcql3zgUgG9H31ITRu2x8xSeiW31t61qCZ61W4wQ3rUqRqeVEZrXYoYFahlX8M+pkWH0X8pycwXZNUfgV47MZDgXu0VbvYECLwu779Yco0f6X3hdN4TsNBZo0YoL7QUsgJdPNLBe8Ga4Vppqttl+DVhowE8LsH9JAsJAvdaKWR5FYIgI3bLxq2B//Kg0="
+ on: travis-build
 
 env:
   global:

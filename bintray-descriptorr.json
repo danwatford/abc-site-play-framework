@@ -1,0 +1,20 @@
+{
+  "package": {
+    "name": "abc-play-site",
+    "repo": "maven",
+    "subject": "abc-site",
+    "licenses": [
+      "Apache 2.0"
+    ]
+  },
+  "version": {
+    "name": "0.0.MICRO_VERSION"
+  },
+  "files": [
+    {
+      "includePattern": "target/universal/(.*\\.zip)",
+      "uploadPattern": "gems/$1"
+    }
+  ],
+  "publish": true
+}
