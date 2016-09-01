@@ -3,4 +3,8 @@
 
 DESCRIPTOR="bintray-descriptor.json"
 
+mkdir -p target/universal
+
+touch target/universal/foo.zip
+
 sed -i "s/MICRO_VERSION/$TRAVIS_BUILD_NUMBER/" "$DESCRIPTOR"

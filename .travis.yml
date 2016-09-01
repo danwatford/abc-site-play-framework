@@ -7,7 +7,7 @@ jdk:
  - oraclejdk8
 
 script:
- - sbt clean dist
+ - sbt clean
 
 before_deploy: bash set_deployment_version.sh
 
