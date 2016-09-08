@@ -26,4 +26,4 @@ sources in (Compile, doc) := Seq.empty
 
 publishArtifact in (Compile, packageDoc) := false
 
-dockerRepository := Some("https://registry.hub.docker.com/danwatford")
+dockerRepository := Some("danwatford")
