@@ -27,3 +27,7 @@ sources in (Compile, doc) := Seq.empty
 publishArtifact in (Compile, packageDoc) := false
 
 dockerRepository := Some("danwatford")
+dockerUpdateLatest := true
+
+dockerExposedVolumes := Seq("/opt/abc-site-play-docker", "/opt/stringstore/conf")
+dockerExposedPorts := Seq(9000)
