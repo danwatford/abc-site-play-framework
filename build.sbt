@@ -16,8 +16,8 @@ libraryDependencies ++= Seq(
   "com.foomoo.abc" %% "abc-domain" % "0.3",
   "com.foomoo.abc" %% "abc-parser" % "0.3",
   "com.foomoo.abc" %% "abc-app" % "0.3",
-  "com.foomoo.string-store" % "string-store-service-api" % "0.2",
-  "com.foomoo.string-store" % "string-store-service-provider-mongo" % "0.2",
+  "com.foomoo.string-store" % "string-store-service-api" % "0.3",
+  "com.foomoo.string-store" % "string-store-service-provider-mongo" % "0.3",
   "org.scalatestplus.play" %% "scalatestplus-play" % "1.5.1" % Test,
   "commons-cli" % "commons-cli" % "1.2"
 )
@@ -29,5 +29,5 @@ publishArtifact in (Compile, packageDoc) := false
 dockerRepository := Some("danwatford")
 dockerUpdateLatest := true
 
-dockerExposedVolumes := Seq("/opt/abc-site-play-docker", "/opt/stringstore/conf")
+dockerExposedVolumes := Seq("/opt/abc-site-play-docker")
 dockerExposedPorts := Seq(9000)
