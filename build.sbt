@@ -1,3 +1,5 @@
+import com.typesafe.sbt.packager.docker.ExecCmd
+
 name := "abc-site-play"
 
 version := "0.2"
@@ -31,3 +33,5 @@ dockerUpdateLatest := true
 
 dockerExposedVolumes := Seq("/opt/abc-site-play-docker")
 dockerExposedPorts := Seq(9000)
+
+dockerCommands ++= Seq(ExecCmd("CMD", "-Dconfig.file=/opt/abc-site-play-docker/production.conf", "-Dmongo.store.db.properties=/opt/abc-site-play-docker/db.properties"))
