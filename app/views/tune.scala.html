@@ -21,7 +21,11 @@
 
         <div id="notation"></div>
 
+        <div id="midi_div_inline" class="col-md-8"></div>
+
         <div id="midi_div"></div>
+
+        <div id="warnings"></div>
     </section>
 
     <section class="gen-section">
@@ -40,11 +44,19 @@
             <li>@fileTemplate(fileRecord)</li>
         }
         </ul>
+
+        <textarea name="abc" id="abc" cols="130" rows="15">@tuneNotationText</textarea>
+
     </section>
 
 
     <script type="text/javascript">
-            ABCJS.renderAbc('notation', `@Html(tuneNotationText)`)
-            ABCJS.renderMidi('midi_div', `@Html(tuneNotationText)`, {}, {inlineControls: {standard: true}})
+            $(window).on("load", function() {
+                new ABCJS.Editor("abc",
+                        { paper_id: "notation", generate_midi: true,
+                            midi_id: "midi_div_inline", midi_download_id: "midi_div", warnings_id: "warnings",
+                            midi_options: { generateInline: true, generateDownload: true } });
+                window.ABCJS.midi.soundfontUrl = "@routes.Assets.versioned("soundfont")/";
+            });
     </script>
 }
