@@ -27,7 +27,7 @@
 
         <div id="warnings"></div>
     </section>
-
+    <br>
     <section class="gen-section">
         <p class="lead">Sequences shared with other tunes:</p>
         <ul>
@@ -45,18 +45,17 @@
         }
         </ul>
 
-        <textarea name="abc" id="abc" cols="130" rows="15">@tuneNotationText</textarea>
-
+        <pre class="source"></pre>
     </section>
 
 
     <script type="text/javascript">
             $(window).on("load", function() {
-                new ABCJS.Editor("abc",
-                        { paper_id: "notation", generate_midi: true,
-                            midi_id: "midi_div_inline", midi_download_id: "midi_div", warnings_id: "warnings",
-                            midi_options: { generateInline: true, generateDownload: true } });
                 window.ABCJS.midi.soundfontUrl = "@routes.Assets.versioned("soundfont")/";
+                var tune = `@Html(tuneNotationText)`;
+                $('.source').text(tune);
+                window.ABCJS.renderAbc('notation', tune);
+                window.ABCJS.renderMidi('midi_div_inline', tune, {}, { generateInline: true, generateDownload: true }, {})
             });
     </script>
 }
