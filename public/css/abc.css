@@ -1,0 +1,49 @@
+/* Set colours. */
+.navbar-collapse, .navbar-header, .site-footer {
+    background-color: #b0caf2;
+}
+
+/* Apply top padding to body to allow for navbar. */
+body {
+    padding-top: 50px;
+}
+
+
+.site-footer {
+    padding-top: 10px;
+}
+
+/* Copyright image and text links */
+#copyright-image {
+    display: block;
+    max-width: 500px;
+    margin: auto;
+}
+#copyright-text {
+    text-align: center;
+}
+
+/* Link to GitHub repository */
+#github-link-col {
+    padding-right: 0;
+}
+#github-link {
+    display: block;
+    max-width: 60px;
+    margin: auto;
+}
+
+.lead {
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.navbar-text {
+    font-size: 20px;
+    vertical-align: middle;
+}
+
+section.gen-section {
+    padding-bottom: 30px;
+}
+

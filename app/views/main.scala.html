@@ -16,42 +16,10 @@
         <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("css/bootstrap.min.css")">
         <link rel="shortcut icon" type="image/png" href="@routes.Assets.versioned("images/favicon.png")">
         <link rel="stylesheet" media="all" href="@routes.Assets.versioned("css/abcjs-midi.css")" type="text/css" />
+        <link rel="stylesheet" media="all" href="@routes.Assets.versioned("css/abc.css")" type="text/css" />
         <script src="@routes.Assets.versioned("js/jquery-3.1.1.min.js")"></script>
         <script src="@routes.Assets.versioned("javascripts/abcjs_editor_midi.js")" type="text/javascript"></script>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
-
-        <style>
-        body {
-            padding-top: 50px;
-        }
-
-        .lead {
-            font-size: 14px;
-            font-weight: bold;
-        }
-
-        .navbar-collapse, .navbar-header {
-            background-color: #b0caf2;
-        }
-
-        .navbar-header {
-            background-color: #b0caf2;
-        }
-
-        .navbar-text {
-            font-size: 20px;
-            vertical-align: middle;
-        }
-
-        section.gen-section {
-            padding-bottom: 30px;
-        }
-
-        #site-image {
-            max-height: 80px;
-        }
-
-        </style>
     </head>
     <body>
         <nav class="navbar navbar-default navbar-fixed-top">
@@ -80,12 +48,26 @@
         @content
         </div>
 
-        <footer class="site-footer">
-            <div class="container">
-                <p><center>
-                <a href="http://www.watfordconsulting.com" rel="home"><img id="site-image" class="img-responsive" src="@routes.Assets.versioned("images/logo-main-1-c1-200.png")"></a>
+        <footer class="footer site-footer container-fluid">
+            <div class="row">
+                <div id="github-link-col" class="col-xs-1">
+                    <a id="github-link" href="https://github.com/danwatford/abc-site-play-framework">
+                        <img class="img-responsive" alt="abc-site-play-framework on github"
+                        src="@routes.Assets.versioned("images/GitHub-Mark-Light-120px-plus.png")">
+                    </a>
+                </div>
+                <div class="col-xs-10">
+                    <a id="copyright-image" href="http://www.watfordconsulting.com">
+                        <img class="img-responsive" alt="Watford Consulting Ltd."
+                        src="@routes.Assets.versioned("images/logo-main-1-c1-200.png")">
+                    </a>
+                </div>
+                <div class="col-xs-1"></div>
+            </div>
+            <div class="row">
+                <div id="copyright-text" class="col-xs-12">
                 Copyright 2015-2016 <a href="http://www.watfordconsulting.com">Watford Consulting Ltd.</a>
-            </center></p>
+                </div>
             </div>
         </footer>
 
