@@ -12,6 +12,11 @@ jdk:
  - oraclejdk8
 
 script:
- - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
- - sbt docker:publish
+ - sbt test package
+
+after_success:
+ - if [ "$TRAVIS_BRANCH" == release* ]; then
+     docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
+     sbt docker:publish
+   fi
 
