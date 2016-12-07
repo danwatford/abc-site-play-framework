@@ -24,26 +24,26 @@ It is recommended that configuration files are placed in /opt/docker-abc/abc-sit
 
 ## production.conf
 This site depends on a production.conf file to specify a secret value needed by the play framework. Create the
-production.conf file and populate with something similar to (excluding the BEGIN/END CONTENTS lines):
+production.conf file and populate with something similar to:
 
-BEGIN CONTENTS
-include "application"
-
-play.crypto.secret="secret_value"
-END CONTENTS
+> include "application"
+>
+> play.crypto.secret="secret_value"
 
 ## MongoDB
 To run the site you will need a Mongo database running somewhere. If no db.conf file is provided the site
 will try to connect to a Mongo DB running on the localhost (docker host), port 27017.
 
 If MongoDB is installed elsewhere a db.conf file is needed with the following settings:
-BEGIN CONTENTS
-hostname=138.68.131.102
-port=27017
-database=stringstore
-collection.strings=strings
-collection.requests=requests
-END CONTENTS
+> hostname=138.68.131.102
+
+> port=27017
+>
+> database=stringstore
+>
+> collection.strings=strings
+>
+> collection.requests=requests
 
 This file should be placed alongside your production.conf file.
 
