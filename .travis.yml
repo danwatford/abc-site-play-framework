@@ -15,6 +15,7 @@ script:
  - sbt test package
 
 after_success:
+ - echo "TRAVIS_BRANCH: $TRAVIS_BRANCH"
  - if [[ "$TRAVIS_BRANCH" == release* ]]; then
      docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
      sbt docker:publish;
