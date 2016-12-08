@@ -2,7 +2,7 @@ import com.typesafe.sbt.packager.docker.ExecCmd
 
 name := "abc-site-play"
 
-version := "0.4.4"
+version := "0.4.5-SNAPSHOT"
 
 resolvers += "Typesafe repository" at "https://repo.typesafe.com/typesafe/maven-releases/"
 resolvers += "JCenter" at "http://jcenter.bintray.com"
